@@ -36,7 +36,7 @@ public class CreateABCompare
 
             File.WriteAllText(Application.dataPath + "/ArtRes/AB/PC/ABCompareInfo.txt", abCompareInfo);
 
-            AssetDatabase.Refresh();
+            //AssetDatabase.Refresh();
 
             Debug.Log("对比文件生成成功");
         }

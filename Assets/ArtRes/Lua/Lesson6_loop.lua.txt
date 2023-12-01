@@ -1,0 +1,53 @@
+print("*******循环语句********")
+
+num  =  0;
+while num <=5 do
+	print(num)
+	num = num+1;  
+end
+print("*******dowhile循环语句********")
+num = 0;
+repeat 
+      print(num)
+      num = num +1
+until num > 5
+
+ print("*******for循环语句********")
+ for i = 2,5 do
+ 	print(i)
+ end 
+
+ for i = 2,5,2 do
+    --print(i)
+end
+
+for i=5 ,1,-1 do
+	--print(i)
+end
+ print("*******选择排序********")
+
+arr = {2,1,5,6,7,89,78,3}
+
+for i=1,#arr do
+	minindex = i
+	min = arr[i]
+	for j=i+1,#arr do
+		 if(min > arr[j]) then
+		 	min = arr[j]
+		 	minindex = j
+		 end
+         if(minindex ~= i) then
+         	arr[minindex] = arr[i]
+            arr[i] = min           	
+         end
+	end
+end
+
+for i=2,#arr do
+	print(arr[i])
+end
+ print("***************")
+
+for i=1,10 do
+	print(i)
+end
