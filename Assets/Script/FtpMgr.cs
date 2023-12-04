@@ -13,7 +13,7 @@ public class FtpMgr
     public static FtpMgr Instance => instance;
 
     //远端FTP服务器的地址
-    private string FTP_PATH = "ftp://192.168.31.133/AB/PC/";
+    private string FTP_PATH = "ftp://10.0.18.39/AB/PC/";
     //用户名和密码
     private string USER_NAME = "tianhaochen";
     private string PASSWORD = "tian20010808";
@@ -63,7 +63,7 @@ public class FtpMgr
                     //上传结束
                     fileStream.Close();
                     upLoadStream.Close();
-                    
+
                 }
                 Debug.Log(fileName + "上传成功");
             }
@@ -84,7 +84,8 @@ public class FtpMgr
     /// <param name="action">下载完毕后想要做什么的委托函数</param>
     public async void DownLoadFile(string fileName, string localPath, UnityAction action = null)
     {
-        await Task.Run(()=> {
+        await Task.Run(() =>
+        {
             try
             {
                 //1.创建一个Ftp连接
@@ -121,8 +122,6 @@ public class FtpMgr
                     downLoadStream.Close();
                 }
                 res.Close();
-
-                Debug.Log("下载成功");
             }
             catch (Exception e)
             {
@@ -133,7 +132,61 @@ public class FtpMgr
         //如果下载结束有想做的事情 在这里调用外部传入的委托函数
         action?.Invoke();
     }
+    /// <summary>
+    /// 下载文件从Ftp服务器当中（同步）
+    /// </summary>
+    /// <param name="fileName">FTP上想要下载的文件名</param>
+    /// <param name="localPath">存储的本地文件路径</param>
+    /// <param name="action">下载完毕后想要做什么的委托函数</param>
+    public void DownLoadFile(string fileName, string localPath, out bool isOver, UnityAction action = null)
+    {
+        try
+        {
+            //1.创建一个Ftp连接
+            FtpWebRequest req = FtpWebRequest.Create(new Uri(FTP_PATH + fileName)) as FtpWebRequest;
+            //2.进行一些设置
+            //凭证
+            req.Credentials = new NetworkCredential(USER_NAME, PASSWORD);
+            //是否操作结束后 关闭 控制连接
+            req.KeepAlive = false;
+            //传输类型
+            req.UseBinary = true;
+            //操作类型
+            req.Method = WebRequestMethods.Ftp.DownloadFile;
+            //代理设置为空
+            req.Proxy = null;
+            //3.下载
+            FtpWebResponse res = req.GetResponse() as FtpWebResponse;
+            Stream downLoadStream = res.GetResponseStream();
+            //写入到本地文件中
+            using (FileStream fileStream = File.Create(localPath))
+            {
+                byte[] bytes = new byte[1024];
+                //读取数据
+                int contentLength = downLoadStream.Read(bytes, 0, bytes.Length);
+                //一点一点的写入
+                while (contentLength != 0)
+                {
+                    //读多少 写多少
+                    fileStream.Write(bytes, 0, contentLength);
+                    //继续读
+                    contentLength = downLoadStream.Read(bytes, 0, bytes.Length);
+                }
+                fileStream.Close();
+                downLoadStream.Close();
+            }
+            res.Close();
+            isOver = true;
+        }
+        catch (Exception e)
+        {
+            Debug.Log("下载失败" + e.Message);
+            isOver = false;
+        }
 
+        //如果下载结束有想做的事情 在这里调用外部传入的委托函数
+        action?.Invoke();
+    }
 
     /// <summary>
     /// 移除指定的文件
@@ -142,7 +195,8 @@ public class FtpMgr
     /// <param name="action">移除过后想做什么的委托函数</param>
     public async void DeleteFile(string fileName, UnityAction<bool> action = null)
     {
-        await Task.Run(()=> {
+        await Task.Run(() =>
+        {
             try
             {
                 //通过一个线程执行这里面的逻辑 那么就不会影响主线程了
@@ -169,7 +223,7 @@ public class FtpMgr
             {
                 Debug.Log("移除失败" + e.Message);
                 action?.Invoke(false);
-            }        
+            }
         });
     }
 
@@ -181,7 +235,8 @@ public class FtpMgr
     /// <param name="action">获取成功后传递给外部 具体的大小</param>
     public async void GetFileSize(string fileName, UnityAction<long> action = null)
     {
-        await Task.Run(() => {
+        await Task.Run(() =>
+        {
             try
             {
                 //通过一个线程执行这里面的逻辑 那么就不会影响主线程了
@@ -221,7 +276,8 @@ public class FtpMgr
     /// <param name="action">创建完成后的回调</param>
     public async void CreateDirectory(string directoryName, UnityAction<bool> action = null)
     {
-        await Task.Run(() => {
+        await Task.Run(() =>
+        {
             try
             {
                 //通过一个线程执行这里面的逻辑 那么就不会影响主线程了
@@ -259,7 +315,8 @@ public class FtpMgr
     /// <param name="action">返回给外部使用的 文件名列表</param>
     public async void GetFileList(string directoryName, UnityAction<List<string>> action = null)
     {
-        await Task.Run(() => {
+        await Task.Run(() =>
+        {
             try
             {
                 //通过一个线程执行这里面的逻辑 那么就不会影响主线程了
