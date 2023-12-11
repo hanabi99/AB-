@@ -1,0 +1,145 @@
+print("*******表2 ********")
+print("*******字典 ********")
+print("*******字典的申明 ********")
+a = {["name"] = "ThC",["age"] = 21, ["sex"] = "men",["1"] = 5}
+print(a["name"])
+print(a["age"])
+print(a["1"])
+
+--如果键是数字则不可以这样调用
+print(a.name)
+--改
+a["name"] = "田浩辰"
+print(a.name)
+--增
+a["heght"] = 180
+print(a.heght)
+--删
+a["heght"] = nil
+print(a.heght)
+print("*******字典的遍历 ********")
+--字典遍历只能用pairs
+	for k,v in pairs(a) do
+	print(k,v)
+	end
+
+	for k,v in pairs(a) do
+	print(k) 
+	print(a[k])
+	end
+	
+print("*******类和结构体 ********")
+--lua 是默认没有面向对象的 需要我们自己来实现
+Student = {
+    age = 1,
+    sex = true,
+    up = function()
+    	--这样写这个age和表中的age是不一样的 这个age是全局变量
+    	--print(age)
+    	print(Student.age)
+    	print("我成长了")
+    end,
+    Learn = function(t)
+    	--能够在函数内部调用自己的属性和方法
+    	--把自己作为参数传进来
+    	print(t.sex)
+    	print("学习啦")
+    end
+}
+Student.name = "thc"
+--很像C#里的静态 用类名直接调用
+--lua中的类的表现 更像是一个类中有很多 静态变量和函数
+function Student:speak()
+	--self关键字表示 默认传入的第一个参数
+	--冒号代表把自己这个类作为第一个参数
+	print(self.name.."说话")
+end
+Student.speak2 = function() 
+   print("回答为题")
+end
+Student.Learn(Student)
+Student:Learn()
+
+print(1111)
+print(Student.name)
+print(Student.age)
+--默认把自己当成参数传进去
+Student:speak()
+Student.speak(Student)
+Student.up()
+Student.speak2()
+
+
+
+print("*******表的公共操作 ********")
+print("*******表的插入 ********")
+t1 = {{age = 21,name = "thc"},{age = 22,name = "shq"}}
+t2 = {name = "masiwei" , sex = true}
+print(#t1)
+table.insert(t1,t2);
+print(#t1)
+print(t1[1])
+print(t1[2])
+print(t1[3])
+print(t1[3].name)
+print("*******表的移除 ********")
+--remove方法会默认移除最后一个元素
+table.remove(t1)
+print(#t1)
+print(t1[3])
+--指定第几个元素
+table.remove(t1,1)
+print(t1[1].name)
+
+print("*******表的拼接 ********")
+
+tb = {1,"23","567","1231"}
+
+str =  table.concat( tb, ";")
+
+print(str)
+
+print("*******排序 ********")
+t3 = {5,3,4,5,1}
+table.sort(t3)
+for _,v in pairs(t3) do
+	print(v)
+end
+print("*******降序 ********")
+t4 = {5,3,4,5,1,2,10,7}
+
+table.sort( t4, function(a,b)
+      if a >b then
+      	return true
+      end
+   end	)
+for _,v in pairs(t4) do
+	print(v)
+end
+
+print("*******插入排序 ********")
+arr = {2,101,111,119,24}
+
+sort = {}
+
+       for i =2 ,#arr do
+            local insertindex = i-1
+            local insertindexval = arr[i]
+             while insertindex > 1 and insertindexval < arr[insertindex] do
+             	    arr[insertindex+1]  = arr[insertindex]
+             	    insertindex = insertindex-1
+             end
+           if insertindex+1 ~= i+1 then
+             	arr[insertindex+1] = insertindexval
+            end
+        end
+ 
+for i=2, #arr do
+	print(arr[i])
+end
+
+
+
+
+
+

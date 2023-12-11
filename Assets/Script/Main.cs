@@ -9,7 +9,6 @@ public class Main : MonoBehaviour
     {
         ABUpdateManager.Instance.CheckUpdate((isOver) =>
         {
-
             if (isOver)
             {
                 Debug.Log("Update Finish");
@@ -24,7 +23,7 @@ public class Main : MonoBehaviour
          {
              print(str);
          });
-
+        Debug.Log(Application.persistentDataPath);
         // ABUpdateManager.Instance.GetLocalABCompareFileInfo();
         //ABUpdateManager.Instance.DownLoadABCompareFile((isover) => {
 

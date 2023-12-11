@@ -309,11 +309,11 @@ public class FtpMgr
     }
 
     /// <summary>
-    /// 过去所有文件名
+    /// 获取所有文件名
     /// </summary>
     /// <param name="directoryName">文件夹路径</param>
     /// <param name="action">返回给外部使用的 文件名列表</param>
-    public async void GetFileList(string directoryName, UnityAction<List<string>> action = null)
+    public async void GetFileList(UnityAction<List<string>> action = null)
     {
         await Task.Run(() =>
         {
@@ -321,7 +321,7 @@ public class FtpMgr
             {
                 //通过一个线程执行这里面的逻辑 那么就不会影响主线程了
                 //1.创建一个Ftp连接
-                FtpWebRequest req = FtpWebRequest.Create(new Uri(FTP_PATH + directoryName)) as FtpWebRequest;
+                FtpWebRequest req = FtpWebRequest.Create(new Uri(FTP_PATH)) as FtpWebRequest;
                 //2.进行一些设置
                 //凭证
                 req.Credentials = new NetworkCredential(USER_NAME, PASSWORD);
@@ -358,4 +358,88 @@ public class FtpMgr
             }
         });
     }
+    /// <summary>
+    /// 获取所有文件名(同步)
+    /// </summary>
+    /// <param name="directoryName">文件夹路径</param>
+    /// <param name="action">返回给外部使用的 文件名列表</param>
+    public List<string> GetFileList()
+    {
+        try
+        {
+            //通过一个线程执行这里面的逻辑 那么就不会影响主线程了
+            //1.创建一个Ftp连接
+            FtpWebRequest req = FtpWebRequest.Create(new Uri(FTP_PATH)) as FtpWebRequest;
+            //2.进行一些设置
+            //凭证
+            req.Credentials = new NetworkCredential(USER_NAME, PASSWORD);
+            //是否操作结束后 关闭 控制连接
+            req.KeepAlive = false;
+            //传输类型
+            req.UseBinary = true;
+            //操作类型
+            req.Method = WebRequestMethods.Ftp.ListDirectory;
+            //代理设置为空
+            req.Proxy = null;
+            //3.真正的创建
+            FtpWebResponse res = req.GetResponse() as FtpWebResponse;
+            //把下载的信息流 转换成StreamReader对象 方便我们一行一行的读取信息
+            StreamReader streamReader = new StreamReader(res.GetResponseStream());
+
+            //用于存储文件名的列表
+            List<string> nameStrs = new List<string>();
+            //一行行的读取
+            string line = streamReader.ReadLine();
+            while (line != null)
+            {
+                nameStrs.Add(line);
+                line = streamReader.ReadLine();
+            }         
+            res.Close();
+            return nameStrs;
+        }
+        catch (Exception e)
+        {
+            Debug.Log("获取文件列表失败" + e.Message);
+        }
+
+        return null;
+    }
+
+
+    /// <summary>
+    /// 移除指定的文件（同步）
+    /// </summary>
+    /// <param name="fileName">文件名</param>
+    /// <param name="action">移除过后想做什么的委托函数</param>
+    public void DeleteFile(string fileName)
+    {
+
+        try
+        {
+            //通过一个线程执行这里面的逻辑 那么就不会影响主线程了
+            //1.创建一个Ftp连接
+            FtpWebRequest req = FtpWebRequest.Create(new Uri(FTP_PATH + fileName)) as FtpWebRequest;
+            //2.进行一些设置
+            //凭证
+            req.Credentials = new NetworkCredential(USER_NAME, PASSWORD);
+            //是否操作结束后 关闭 控制连接
+            req.KeepAlive = false;
+            //传输类型
+            req.UseBinary = true;
+            //操作类型
+            req.Method = WebRequestMethods.Ftp.DeleteFile;
+            //代理设置为空
+            req.Proxy = null;
+            //3.真正的删除
+            FtpWebResponse res = req.GetResponse() as FtpWebResponse;
+            res.Close();
+        }
+        catch (Exception e)
+        {
+            Debug.Log("移除失败" + e.Message);
+        }
+    }
+    
 }
+

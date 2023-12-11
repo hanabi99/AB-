@@ -9,6 +9,8 @@ public class UpLoadAB : MonoBehaviour
     [MenuItem("AB包工具/上传AB包和对比文件")]
     private static void UpLoadAllABFile()
     {
+
+
         //获取文件夹信息
         DirectoryInfo directoryInfo = Directory.CreateDirectory(Application.dataPath + "/ArtRes/AB/PC/");
         if (directoryInfo != null)
@@ -21,21 +23,26 @@ public class UpLoadAB : MonoBehaviour
                 return;
             }
 
+            List<string> filelist = new List<string>();
+            //清空文件
+            if (FtpMgr.Instance.GetFileList() != null)
+            {
+                filelist = FtpMgr.Instance.GetFileList();
+            }
+            for (int i = 0; i < filelist.Count; i++)
+            {
+                FtpMgr.Instance.DeleteFile(filelist[i]);
+            }
+
             foreach (FileInfo Info in fileInfos)
             {
-                if (Info.Extension == ""|| Info.Extension ==".txt")//没有后缀的才是AB包 或者是对比文件
+                if (Info.Extension == "" || Info.Extension == ".txt")//没有后缀的才是AB包 或者是对比文件
                 {
-                    //上传文件
-                    FtpMgr.Instance.UpLoadFile(Info.Name, Info.FullName);
+                    FtpMgr.Instance.UpLoadFile(Info.Name, Info.FullName);                   
                 }
             }
 
         }
-    }
-
-    private static void FtpUpLoadFile(string filepath)
-    {
-
     }
 }
 

@@ -1,10 +1,7 @@
 ManifestFileVersion: 0
-CRC: 130717107
+CRC: 619194332
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: model
-      Dependencies: {}
-    Info_1:
-      Name: lua
       Dependencies: {}
