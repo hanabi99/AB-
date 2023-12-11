@@ -8,7 +8,7 @@ using System.Text;
 
 public class CreateABCompare
 {
-    [MenuItem("AB包工具/创建对比文件")]
+    //[MenuItem("AB包工具/创建对比文件")]
     public static void CreateABCompareFile()
     {
         //获取文件夹信息

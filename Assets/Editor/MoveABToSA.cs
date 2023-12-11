@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class MoveABToSA
 {
-    [MenuItem("AB包工具/移动选中资源到StreamingAssets中")]
-    private static void MoveABToStreamingAssets()
+    //[MenuItem("AB包工具/移动选中资源到StreamingAssets中")]
+    private  void MoveABToStreamingAssets()
     {
        
         Object[] selectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);

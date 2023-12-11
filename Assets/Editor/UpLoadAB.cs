@@ -6,11 +6,9 @@ using UnityEngine;
 
 public class UpLoadAB : MonoBehaviour
 {
-    [MenuItem("AB包工具/上传AB包和对比文件")]
+    //[MenuItem("AB包工具/上传AB包和对比文件")]
     private static void UpLoadAllABFile()
     {
-
-
         //获取文件夹信息
         DirectoryInfo directoryInfo = Directory.CreateDirectory(Application.dataPath + "/ArtRes/AB/PC/");
         if (directoryInfo != null)

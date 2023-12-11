@@ -13,7 +13,21 @@ public class FtpMgr
     public static FtpMgr Instance => instance;
 
     //远端FTP服务器的地址
-    private string FTP_PATH = "ftp://10.0.18.39/AB/PC/";
+    public string FTP_PATH
+    {
+        get
+        {
+            return
+#if UNITY_IOS
+"IOS";   ftp://10.0.18.39/AB/" + "IOS"+ "/";
+#elif UNITY_ANDROID
+                  "ftp://10.0.18.39/AB/" + "ANDROID" + "/";
+#else
+                    "ftp://10.0.18.39/AB/" + "PC" + "/";
+#endif
+        }
+    }
+
     //用户名和密码
     private string USER_NAME = "tianhaochen";
     private string PASSWORD = "tian20010808";

@@ -11,7 +11,7 @@ public class ABUpdateManager : MonoBehaviour
     private static ABUpdateManager instance;
 
     //存储远端AB包字典
-    public Dictionary<string,ABInfo> RemoteAbInfoDic= new Dictionary<string,ABInfo>();
+    public Dictionary<string, ABInfo> RemoteAbInfoDic = new Dictionary<string, ABInfo>();
 
     //存储本地AB包字典
     public Dictionary<string, ABInfo> LocalAbInfoDic = new Dictionary<string, ABInfo>();
@@ -22,7 +22,7 @@ public class ABUpdateManager : MonoBehaviour
     public List<string> downLoadList = new List<string>();
 
 
-    public static string localPath = Application.persistentDataPath + "/" + "HotUpdate" + "/";
+    public static string localPath =Application.persistentDataPath + "/" + "HotUpdate" + "/";
 
     public int RetryCount = 5;
 
@@ -57,13 +57,14 @@ public class ABUpdateManager : MonoBehaviour
             if (isOver)
             {
                 updateInfoCallBack("对比文件下载结束");
-                string remoteInfo = File.ReadAllText(Application.persistentDataPath + "/" + "HotUpdate" + "/" +"ABCompareInfo_TMP.txt");
+                string remoteInfo = File.ReadAllText(localPath + "ABCompareInfo_TMP.txt");
                 updateInfoCallBack("解析远端对比文件");
                 ReadABCompareFileInfo(remoteInfo, RemoteAbInfoDic);
                 updateInfoCallBack("解析远端对比文件完成");
 
                 //2.加载本地资源对比文件
-                GetLocalABCompareFileInfo((isOver)=> {
+                GetLocalABCompareFileInfo((isOver) =>
+                {
                     if (isOver)
                     {
                         updateInfoCallBack("解析本地对比文件完成");
@@ -91,7 +92,8 @@ public class ABUpdateManager : MonoBehaviour
                         {
                             //如果可读写文件夹中有内容 我们就删除它 
                             //默认资源中的 信息 我们没办法删除
-                            if (File.Exists((localPath + abName))){
+                            if (File.Exists((localPath + abName)))
+                            {
                                 File.Delete(localPath + abName);
                             }
                         }
@@ -204,12 +206,18 @@ public class ABUpdateManager : MonoBehaviour
         //只有当可读可写中没有对比文件时  才会来加载默认资源（第一次进游戏时才会发生）
         else if (File.Exists(Application.streamingAssetsPath + "/ABCompareInfo.txt"))
         {
-            StartCoroutine(GetLocalABCompareFileInfo(Application.streamingAssetsPath + "/ABCompareInfo.txt", overCallBack));
+            string path =
+#if UNITY_ANDROID
+"Application.streamingAssetsPath"
+#else
+ "file:///" + Application.streamingAssetsPath;
+#endif
+            StartCoroutine(GetLocalABCompareFileInfo(path + "/ABCompareInfo.txt", overCallBack));
         }
         //如果两个都不进 证明第一次并且没有默认资源 
         else
             overCallBack(true);
-    }
+     }
     /// <summary>
     ///  加载本地对比文件信息 并且解析存入字典
     /// </summary>
@@ -245,12 +253,13 @@ public class ABUpdateManager : MonoBehaviour
         public string name;
         public long size;
         public string md5;
-        public ABInfo(string name,string size,string md5)
+        public ABInfo(string name, string size, string md5)
         {
             this.name = name;
             this.size = long.Parse(size);
             this.md5 = md5;
         }
     }
-
 }
+
+
